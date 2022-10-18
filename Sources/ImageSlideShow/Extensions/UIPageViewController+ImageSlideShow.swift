@@ -7,25 +7,18 @@
 
 import UIKit
 
-extension UIPageViewController
-{
-	//	ScrollView
-	
-	func scrollView() -> UIScrollView?
-	{
-		for view in view.subviews
-		{
-			if let scrollview = view as? UIScrollView
-			{
-				return scrollview
-			}
-		}
-		
-		return nil
-	}
-	
-	func setScrollEnabled(enabled:Bool)
-	{
-		scrollView()?.isScrollEnabled = enabled
-	}
+extension UIPageViewController {
+  //    ScrollView
+  func scrollView() -> UIScrollView? {
+    for view in view.subviews {
+      if let scrollview = view as? UIScrollView {
+        return scrollview
+      }
+    }
+    return nil
+  }
+  
+  func setScrollEnabled(enabled: Bool) {
+    scrollView()?.isScrollEnabled = enabled
+  }
 }
