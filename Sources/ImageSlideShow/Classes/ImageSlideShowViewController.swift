@@ -66,7 +66,6 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
   override open var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
     return .fade
   }
-
   
   override open var preferredStatusBarStyle: UIStatusBarStyle {
     return statusBarStyle
@@ -108,6 +107,23 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     }
   }
   
+  class open func presentByCustomTransitionFrom(_ viewController: UIViewController, configure: ((_ controller: ImageSlideShowViewController) -> Void)?) {
+    let navController = self.imageSlideShowNavigationController()
+    navController.modalPresentationStyle = .custom
+    if let issViewController = navController.visibleViewController as? ImageSlideShowViewController, let delegate = viewController as? UIViewControllerTransitioningDelegate {
+      navController.transitioningDelegate = delegate
+      configure?(issViewController)
+      viewController.present(navController, animated: true, completion: nil)
+    }
+  }
+  
+  class open func pushFrom(_ navigationController: UINavigationController, configure: ((_ controller: ImageSlideShowViewController) -> Void)?) {
+    let issViewController = imageSlideShowViewController()
+    
+    configure?(issViewController)
+    navigationController.pushViewController(issViewController, animated: true)
+  }
+  
   required public init?(coder: NSCoder) {
     super.init(coder: coder)
     self.prepareAnimations()
@@ -139,12 +155,12 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     singleTapGesture.numberOfTapsRequired = 1
     singleTapGesture.require(toFail: doubleTapGesture)
     gestures.append(singleTapGesture)
-
+    
     if dismissOnPanGesture {
       let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.panGesture(_:)))
       gestures.append(panGesture)
       
-
+      
       scrollView()?.isDirectionalLockEnabled = true
       scrollView()?.alwaysBounceVertical = false
     }
@@ -161,7 +177,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
   override open func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     self.view.backgroundColor = .black
-
+    
     slideShowViewDidAppear?(animated)
   }
   
@@ -228,7 +244,7 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
   
   
   public func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-//    self.setNavigationBar(visible: false)
+    //    self.setNavigationBar(visible: false)
   }
   
   public func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
@@ -287,9 +303,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
         guard let controller = self.storyboard?.instantiateViewController(withIdentifier: "ImageSlideViewController") as? ImageSlideViewController else { fatalError("Unable to instantiate a ImageSlideViewController.") }
         controller.slide = slide
         controller.enableZoom = enableZoom
-//        controller.willBeginZoom = {
-//          self.setNavigationBar(visible: false)
-//        }
+        //        controller.willBeginZoom = {
+        //          self.setNavigationBar(visible: false)
+        //        }
         slidesViewControllerCache.setObject(controller, forKey: slide.slideIdentifier() as AnyObject)
         return controller
       }
@@ -358,8 +374,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     }
   }
 }
-  
-  // MARK: Gestures
+
+// MARK: Gestures
 extension ImageSlideShowViewController: UIGestureRecognizerDelegate {
   
   @objc private func doubleTapGesture(_ gesture: UITapGestureRecognizer) {
@@ -375,52 +391,52 @@ extension ImageSlideShowViewController: UIGestureRecognizerDelegate {
     let viewController = slideViewController(forPageIndex: currentIndex)
     
     switch gesture.state {
-      case .began:
-//        presentingViewController?.view.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        originPanViewCenter = view.center
-        panViewCenter = view.center
-        stepAnimate(0, viewController!)
-        
-      case .changed:
-        let translation = gesture.translation(in: view)
-        panViewCenter = CGPoint(x: panViewCenter.x + translation.x, y: panViewCenter.y + translation.y)
-        gesture.setTranslation(.zero, in: view)
-        let distanceX = abs(originPanViewCenter.x - panViewCenter.x)
-        let distanceY = abs(originPanViewCenter.y - panViewCenter.y)
-        let distance = max(distanceX, distanceY)
-        let center = max(originPanViewCenter.x, originPanViewCenter.y)
-        let distanceNormalized = max(0, min((distance / center), 1.0))
-        stepAnimate(distanceNormalized, viewController!)
-        
-      case .ended, .cancelled, .failed:
-        let distanceY = abs(originPanViewCenter.y - panViewCenter.y)
-        if (distanceY >= panDismissTolerance) {
-          UIView.animate(
-            withDuration: 0.3,
-            delay: 0.0,
-            options: .beginFromCurrentState,
-            animations: { () -> Void in
-              self.navigationController?.view.alpha = 0.0
-            }
-          )
-          dismissAnimation(viewController!, gesture.velocity(in: gesture.view), {
-            self.dismiss(sender: nil)
-          })
-        } else {
-          UIView.animate(
-            withDuration: 0.2,
-            delay: 0.0,
-            options: .beginFromCurrentState,
-            animations: { () -> Void in
-              self.navigationBarHidden = true
-              self.navigationController?.navigationBar.alpha = 0.0
-              self.navigationController?.view.backgroundColor = .black
-            }
-          )
-          restoreAnimation(viewController!)
-        }
-        
-      default: break
+    case .began:
+      //        presentingViewController?.view.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+      originPanViewCenter = view.center
+      panViewCenter = view.center
+      stepAnimate(0, viewController!)
+      
+    case .changed:
+      let translation = gesture.translation(in: view)
+      panViewCenter = CGPoint(x: panViewCenter.x + translation.x, y: panViewCenter.y + translation.y)
+      gesture.setTranslation(.zero, in: view)
+      let distanceX = abs(originPanViewCenter.x - panViewCenter.x)
+      let distanceY = abs(originPanViewCenter.y - panViewCenter.y)
+      let distance = max(distanceX, distanceY)
+      let center = max(originPanViewCenter.x, originPanViewCenter.y)
+      let distanceNormalized = max(0, min((distance / center), 1.0))
+      stepAnimate(distanceNormalized, viewController!)
+      
+    case .ended, .cancelled, .failed:
+      let distanceY = abs(originPanViewCenter.y - panViewCenter.y)
+      if (distanceY >= panDismissTolerance) {
+        UIView.animate(
+          withDuration: 0.3,
+          delay: 0.0,
+          options: .beginFromCurrentState,
+          animations: { () -> Void in
+            self.navigationController?.view.alpha = 0.0
+          }
+        )
+        dismissAnimation(viewController!, gesture.velocity(in: gesture.view), {
+          self.dismiss(sender: nil)
+        })
+      } else {
+        UIView.animate(
+          withDuration: 0.2,
+          delay: 0.0,
+          options: .beginFromCurrentState,
+          animations: { () -> Void in
+            self.navigationBarHidden = true
+            self.navigationController?.navigationBar.alpha = 0.0
+            self.navigationController?.view.backgroundColor = .black
+          }
+        )
+        restoreAnimation(viewController!)
+      }
+      
+    default: break
     }
   }
 }
