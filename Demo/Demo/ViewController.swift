@@ -77,30 +77,40 @@ class ViewController: UIViewController {
 	
 	@IBAction func presentSlideShow(_ sender:AnyObject?)
 	{
-		ImageSlideShowViewController.presentFrom(self){ [weak self] controller in
-			
+		ImageSlideShowViewController.presentByCustomTransitionFrom(self){ [weak self] controller in
 			controller.dismissOnPanGesture = true
 			controller.slides = self?.images
 			controller.enableZoom = true
 			controller.controllerDidDismiss = {
 				debugPrint("Controller Dismissed")
-				
+
 				debugPrint("last index viewed: \(controller.currentIndex)")
 			}
-			
+
 			controller.slideShowViewDidLoad = {
 				debugPrint("Did Load")
 			}
-			
+
 			controller.slideShowViewWillAppear = { animated in
 				debugPrint("Will Appear Animated: \(animated)")
 			}
-			
+
 			controller.slideShowViewDidAppear = { animated in
 				debugPrint("Did Appear Animated: \(animated)")
 			}
-			
+
 		}
 	}
 }
 
+
+extension ViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return ImageSlideShowViewController.presentLikePush
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return ImageSlideShowViewController.dismissLikePush
+    }
+}
