@@ -129,6 +129,36 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     self.prepareAnimations()
   }
   
+  //  MARK: - UI Component
+  private let leftImage: UIImageView = {
+    let iv = UIImageView()
+    iv.contentMode = .scaleAspectFit
+    iv.image = UIImage(systemName: "chevron.backward")
+    iv.translatesAutoresizingMaskIntoConstraints = false
+    iv.tintColor = UIColor(red: 0.682, green: 0.686, blue: 0.69, alpha: 1)
+    return iv
+  }()
+  
+  private let rightImage: UIImageView = {
+    let iv = UIImageView()
+    iv.contentMode = .scaleAspectFit
+    iv.image = UIImage(systemName: "chevron.right")
+    iv.translatesAutoresizingMaskIntoConstraints = false
+    iv.tintColor = UIColor(red: 0.682, green: 0.686, blue: 0.69, alpha: 1)
+    return iv
+  }()
+  
+  private let countLabel: UILabel = {
+    let label = UILabel()
+    label.font = UIFont.systemFont(ofSize: 16, weight: .light)
+    label.textColor = UIColor(red: 0.682, green: 0.686, blue: 0.69, alpha: 1)
+    label.numberOfLines = 1
+    label.textAlignment = .center
+    label.sizeToFit()
+    label.translatesAutoresizingMaskIntoConstraints = false
+    return label
+  }()
+  
   //  MARK: - Instance methods
   
   override open func viewDidLoad() {
@@ -136,9 +166,10 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     delegate = self
     dataSource = self
     hidesBottomBarWhenPushed = true
-    let image = UIImage(systemName: "xmark")
+    let image = UIImage(systemName: "arrow.backward")
+    let downloadImage = UIImage(systemName: "square.and.arrow.down")
     let leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: #selector(dismiss))
-    let rightBarButtonItem = UIBarButtonItem.init(title: "저장", style: .done, target: self, action: #selector(saveToGallery))
+    let rightBarButtonItem = UIBarButtonItem.init(image: downloadImage, style: .done, target: self, action: #selector(saveToGallery))
     navigationItem.leftBarButtonItem = leftBarButtonItem
     navigationItem.rightBarButtonItem = rightBarButtonItem
     view.backgroundColor = .black
@@ -166,6 +197,8 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     }
     view.gestureRecognizers = gestures
     slideShowViewDidLoad?()
+    
+    self.setLayout()
   }
   
   override open func viewWillAppear(_ animated: Bool) {
@@ -214,6 +247,23 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
     if index >= 0 {
       setPage(withIndex: index)
     }
+  }
+  
+  func setLayout() {
+    [leftImage, countLabel, rightImage].forEach { self.view.addSubview($0) }
+    
+    leftImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 142 / 375 * UIScreen.main.bounds.width).isActive = true
+    leftImage.widthAnchor.constraint(equalToConstant: 24).isActive = true
+    leftImage.heightAnchor.constraint(equalToConstant: 24).isActive = true
+    leftImage.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -36).isActive = true
+    
+    countLabel.centerYAnchor.constraint(equalTo: leftImage.centerYAnchor).isActive = true
+    countLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    
+    rightImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -142 / 375 * UIScreen.main.bounds.width).isActive = true
+    rightImage.widthAnchor.constraint(equalToConstant: 24).isActive = true
+    rightImage.heightAnchor.constraint(equalToConstant: 24).isActive = true
+    rightImage.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -36).isActive = true
   }
   
   func setPage(withIndex index: Int) {
@@ -369,6 +419,9 @@ open class ImageSlideShowViewController: UIPageViewController, UIPageViewControl
   }
   
   private func updateSlideBasedUI() {
+    if let slidesCount = slides?.count {
+      self.countLabel.text = "\(currentIndex + 1)/\(slidesCount)"
+    }
     if let title = currentSlide?.title {
       navigationItem.title = title
     }
