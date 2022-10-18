@@ -10,7 +10,7 @@
         <!--Image Slide Show View Controller-->
         <scene sceneID="SP8-jp-pdT">
             <objects>
-                <pageViewController storyboardIdentifier="ImageSlideShowViewController" autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="scroll" pageSpacing="10" navigationOrientation="horizontal" spineLocation="none" id="qyz-oM-rqY" customClass="ImageSlideShowViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                <pageViewController storyboardIdentifier="ImageSlideShowViewController" autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="scroll" pageSpacing="10" navigationOrientation="horizontal" spineLocation="none" id="qyz-oM-rqY" customClass="ImageSlideShowViewController" customModule="ImageSlideShow" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="0YM-cN-H4F"/>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mNC-Yc-kYH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -20,7 +20,7 @@
         <!--Image Slide Show Navigation Controller-->
         <scene sceneID="SB8-aY-Yrd">
             <objects>
-                <navigationController storyboardIdentifier="ImageSlideShowNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PJ3-gM-bi3" customClass="ImageSlideShowNavigationController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="ImageSlideShowNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="PJ3-gM-bi3" customClass="ImageSlideShowNavigationController" customModule="ImageSlideShow" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="bdJ-bZ-9av">
                         <rect key="frame" x="0.0" y="47" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -36,7 +36,7 @@
         <!--Image Slide View Controller-->
         <scene sceneID="xZc-65-CeH">
             <objects>
-                <viewController storyboardIdentifier="ImageSlideViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ac2-3e-xTy" customClass="ImageSlideViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImageSlideViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ac2-3e-xTy" customClass="ImageSlideViewController" customModule="ImageSlideShow" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="MJ6-VH-Jjs"/>
                         <viewControllerLayoutGuide type="bottom" id="P3f-r7-4bc"/>
